@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+import RandomPhotos from "./components/random-photos.component";
+
+import "./App.scss";
+
+class App extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      items: Array.from({ length: 12 }),
+    };
+  }
+
+  fetchMoreData = () => {
+    setTimeout(() => {
+      this.setState({
+        items: this.state.items.concat(Array.from({ length: 12 })),
+      });
+    }, 1000);
+  };
+
+  render() {
+    return (
+      <div>
+        <h1 className="heading">Infinite Scroll In React</h1>
+        <InfiniteScroll
+          dataLength={this.state.items.length}
+          next={this.fetchMoreData}
+          hasMore={true}
+          loader={<h1 className="heading">Loading...</h1>}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          {this.state.items.map((i, index) => (
+            <RandomPhotos key={index} index={index} />
+          ))}
+        </InfiniteScroll>
+      </div>
+    );
+  }
 }
 
 export default App;
